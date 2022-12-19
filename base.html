@@ -1,0 +1,157 @@
+{% load static %}
+{% load cart_template_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>{% block title %}  {% endblock title %}</title>
+    {% block extra_head %}  {% endblock %}
+</head>
+<body>
+    
+<nav class="navbar navbar-expand-lg navbar-light nav__bar">
+    <div class="container-fluid">
+        <a class="navbar-brand fs-3 fw-bolder" href="/"><span class="logo-1">Tech</span><span class="logo-2">Shop</span></a>
+        <button class="navbar-toggler custom_toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ms-5 me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link text-light ms-2 custom_fs" href="{% url 'store:product-list' 'laptop' %}">Laptop</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-light ms-2 custom_fs" href="{% url 'store:product-list' 'monitor' %}">Monitor</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-light ms-2 custom_fs" href="{% url 'store:product-list' 'tablet' %}">Tablet</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-light ms-2 custom_fs" href="{% url 'store:product-list' 'camera' %}">Camera</a>
+            </li>
+            {% if request.user.is_authenticated %}
+            <li class="nav-item me-2 nav_cart">
+              <a href="{% url 'store:order-summary' %}" class="nav-link text-light ms-2 me-2 custom_fs">
+                <i class="fa fa-shopping-cart"></i>
+                <span class="cart_count"> {{ request.user|cart_item_count }} </span>
+              </a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                User
+              </a>
+              <ul class="dropdown-menu dropdown__menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item text-light" href="#">Dashboard</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-light" href="{% url 'account_logout' %}">Logout</a></li>
+              </ul>
+            </li>
+            {% else %}
+            <li class="nav-item nav_cart">
+              <a class="nav-link text-light ms-2 custom_fs" href="{% url 'account_login' %}">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-light ms-2 custom_fs" href="{% url 'account_signup' %}">Signup</a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+    </div>
+</nav>
+
+{% if messages %}
+<div class="pt-2">
+  {% for message in messages %}
+  <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% block content %}  {% endblock content %}
+
+{% block extra_body %}  {% endblock %}
+
+<footer>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-6">
+        <h5 class="text-uppercase text-light ps-2 pb-1 ms-4 mt-5 mb-4 footer_caption">About Us</h5>
+        <ul class="about_us">
+          <li><a class="text-secondary text-decoration-none" href="#">About Us</a></li>
+          <li><a class="text-secondary text-decoration-none" href="#">Terms and Conditions</a></li>
+          <li><a class="text-secondary text-decoration-none" href="#">Privacy Policy</a></li>
+          <li><a class="text-secondary text-decoration-none" href="#">Rewards Program</a></li>
+          <li><a class="text-secondary text-decoration-none" href="#">Online Delivery</a></li>
+          <li><a class="text-secondary text-decoration-none" href="#">Refund and Return Policy</a></li>
+          <li><a class="text-secondary text-decoration-none" href="#">Store Location</a></li>
+          <li><a class="text-secondary text-decoration-none" href="#">Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="col-md-3">
+        <h5 class="text-uppercase text-light ps-2 pb-1 ms-4 mt-5 mb-4 footer_caption">Customer Care</h5>
+        <ul>
+          <li><a class="text-secondary text-decoration-none" href="#">Your Account</a></li>
+          <li><a class="text-secondary text-decoration-none" href="#">Coupon Code</a></li>
+          <li><a class="text-secondary text-decoration-none" href="#">Price Match Guarantee</a></li>
+          <li><a class="text-secondary text-decoration-none" href="#">FAQs</a></li>
+        </ul>
+      </div>
+      <div class="col-md-3">
+        <h5 class="text-uppercase text-light pb-1 mt-5 mb-4 footer_caption">Stay Connected</h5>
+        <p>
+          <b class="text-light">Tech Shop Ltd</b><br>
+          <p class="text-secondary">6th floor, 28 Kazi Nazrul Islam Ave,Navana Zohura Square, Dhaka 1000</p> 
+        </p>
+        <p>
+          <b class="text-secondary">Email:</b><br>
+          <a class="mail" href="mailto:webteam@startechbd.com">webteam@startechbd.com</a> 
+        </p>
+        <p class="my-4">
+          <a href="#" target="_blank">
+            <i class="fa fa-facebook text-light fs-5 me-3"></i>
+          </a>
+          <a href="#" target="_blank">
+            <i class="fa fa-twitter text-light fs-5 me-3"></i>
+          </a>
+          <a href="#" target="_blank">
+            <i class="fa fa-instagram text-light fs-5 me-3"></i>
+          </a>
+        </p>
+      </div>
+    </div>
+
+    <hr class="text-light">
+    <p class="text-muted pt-2 pb-4 ps-2 ms-4">&copy; 2021 Tech Shop Ltd | All rights reserved</p>
+  </div>
+</footer>
+
+<script src="{% static 'js/bootstrap.js' %}"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
+    
+  

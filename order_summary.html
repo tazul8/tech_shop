@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}
+summary
+{% endblock title %}
+
+{% block content %}
+<div class="main_section py-3">
+  <div class="container-fluid">
+    <div class="bg-white px-3 pt-3 pb-5">
+        <div class="table-responsive cart_table">
+            <h4 class="fw-bold">Shopping Cart</h4>
+            <table class="table mt-4 mb-5">
+                <thead>
+                  <tr class="table_head_row">
+                    <th scope="col" class="table_head">Image</th>
+                    <th scope="col" class="table_head">Product Name</th>
+                    <th scope="col" class="table_head">Quantity</th>
+                    <th scope="col" class="table_head">Unit Price</th>
+                    <th scope="col" class="table_head">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for order_item in object.items.all %}
+                  <tr>
+                    <td><img src="{{ order_item.item.image.url }}" alt="{{ order_item.item.alternative_text }}"></td>
+                    <td>{{ order_item.item.title }}</td>
+                    <td>
+                        <div class="quantity buttons_added">
+                            <a href="{% url 'store:remove-single-item-from-cart' order_item.item.slug %}" type="button" id="sub" class="sub minus">-</a>
+                            <a name="qty" type="input" class="form-control quantityTxt input-text qty text text-decoration-none" readonly="">{{ order_item.quantity }}</a>
+                            <a href="{% url 'store:add-to-cart' order_item.item.slug %}" type="button" id="add" class="add plus">+</a>
+                        </div>
+                        <a href="{% url 'store:remove-from-cart' order_item.item.slug %}" class="fs-4 text-decoration-none text-dark ms-2">
+                            &times;
+                        </a>
+                    </td>
+                    {% if order_item.item.discount_price %}
+                    <td>${{ order_item.item.discount_price }}</td>
+                    <td>${{ order_item.get_total_discount_item_price }}</td>
+                    {% else %}
+                    <td>${{ order_item.item.price }}</td>
+                    <td>${{ order_item.get_total_item_price }}</td>
+                    {% endif %}
+                  </tr>
+                  {% empty %}
+                  <tr>
+                    <td colspan="5">Your cart is empty</td>
+                  </tr>
+                  <tr>
+                      <td colspan="5"> 
+                          <a class="btn btn-primary float-right ml-2" href="/">Continue shopping</a> 
+                      </td>
+                  </tr>
+                  {% endfor %}
+                  {% if object.get_sub_total %}
+                  <tr>
+                    <td style="border: 0;" colspan="2"></td>
+                    <td class="fw-bold text-center" colspan="2">Sub Total</td>
+                    <td class="fw-bold">${{ object.get_sub_total }}</td>
+                  </tr>
+                  {% endif %}
+                  {% if object.coupon %}
+                  <tr>
+                    <td style="border: 0;" colspan="2"></td>
+                    <td class="text-center" colspan="2">Coupon</td>
+                    <td>${{ object.coupon.amount }}</td>
+                  </tr>
+                  {% endif %}
+                  {% if object.get_total %}
+                  <tr>
+                    <td style="border: 0;" colspan="2"></td>
+                    <td class="fw-bold text-center" colspan="2">Total</td>
+                    <td class="fw-bold">${{ object.get_total }}</td>
+                  </tr>
+                  {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if object.get_sub_total %}
+        <h5 class="fw-bold">Choose if you have a discount code</h5>
+        <form action="{% url 'store:add-coupon' %}" method="POST">
+          {% csrf_token %}
+          <div class="row mb-4">
+              <div class="col-md-4">
+                  <div class="input-group mb-3">
+                      {{ couponform.code }}
+                      <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Apply</button>
+                  </div>
+              </div>
+              <div class="col-md-4"></div>
+              <div class="col-md-4"></div>
+          </div>
+        </form>
+        {% endif %}
+
+        {% if object.get_total %}
+        <div class="pb-2 mb-4">
+          <a href="{% url 'store:checkout' %}" class="btn btn-secondary float-end px-4 ms-2">Confirm Order</a>
+          <a href="/" class="btn btn-secondary float-end px-4">Continue Shopping</a>
+        </div>
+        {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
