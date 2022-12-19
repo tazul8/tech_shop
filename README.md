@@ -1,1 +1,1 @@
-# tech_shop
+# Technology Shop
